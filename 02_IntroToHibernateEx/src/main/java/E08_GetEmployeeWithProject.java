@@ -16,11 +16,8 @@ public class E08_GetEmployeeWithProject {
         Scanner console = new Scanner(System.in);
         int id = Integer.parseInt(console.nextLine());
 
-        Employee employee = entityManager.
-                createQuery("FROM Employee e WHERE e.id = :id", Employee.class).
-                setParameter("id", id).
-                getSingleResult();
-
+        Employee employee = entityManager.find(Employee.class, id);
+        
         System.out.println(employee);
 
         entityManager.getTransaction().commit();
