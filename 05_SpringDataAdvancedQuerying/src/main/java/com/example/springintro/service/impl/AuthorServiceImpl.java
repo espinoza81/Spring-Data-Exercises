@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -57,6 +58,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<String> findAllFirstNameEndWith(String endWith) {
         return authorRepository.findByFirstNameEndsWith(endWith)
+                .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(a -> a.getFirstName() + " " + a.getLastName())
                 .collect(Collectors.toList());
@@ -65,6 +67,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<String> findAllLastNameStartWithAllBookTitle(String startWith) {
         return authorRepository.findByLastNameStartsWith(startWith)
+                .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(a -> String.format("%s %s%n%s%n",
                         a.getFirstName(),
@@ -77,6 +80,6 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<AuthorNameWithTotalCopies> findAllAuthorsWithTotalCopies() {
 
-        return authorRepository.authorsByBookCopies();
+        return authorRepository.authorsByBookCopies().orElseThrow(NoSuchElementException::new);
     }
 }

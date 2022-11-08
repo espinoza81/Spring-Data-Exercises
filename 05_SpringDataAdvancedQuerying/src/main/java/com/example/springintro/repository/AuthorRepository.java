@@ -7,17 +7,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
-    List<Author> findByFirstNameEndsWith(String endWith);
+    Optional<List<Author>> findByFirstNameEndsWith(String endWith);
 
-    List<Author> findByLastNameStartsWith(String startWith);
+    Optional<List<Author>> findByLastNameStartsWith(String startWith);
 
     @Query("SELECT a.firstName AS firstName, a.lastName AS lastName, SUM(b.copies) AS totalCopies "+
             "FROM Author a " +
             "JOIN a.books AS b " +
             "GROUP BY b.author " +
             "ORDER BY totalCopies DESC")
-    List<AuthorNameWithTotalCopies> authorsByBookCopies();
+    Optional<List<AuthorNameWithTotalCopies>> authorsByBookCopies();
 }

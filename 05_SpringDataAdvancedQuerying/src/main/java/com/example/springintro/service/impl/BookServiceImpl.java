@@ -14,10 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,6 +63,7 @@ public class BookServiceImpl implements BookService {
         AgeRestriction restriction = AgeRestriction.valueOf(ageRestriction);
 
         return bookRepository.findByAgeRestrictionEquals(restriction)
+                .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(Book::getTitle)
                 .collect(Collectors.toList());
@@ -75,6 +73,7 @@ public class BookServiceImpl implements BookService {
     public List<String> findAllBooksTitlesByEditionTypeAndCopiesLessThan(EditionType editionType, int copies) {
 
         return bookRepository.findByEditionTypeEqualsAndCopiesLessThan(editionType, copies)
+                .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(Book::getTitle)
                 .collect(Collectors.toList());
@@ -87,6 +86,7 @@ public class BookServiceImpl implements BookService {
         BigDecimal higher = BigDecimal.valueOf(higherPrice);
 
         return bookRepository.findByPriceBeforeOrPriceAfter(lover, higher)
+                .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(b -> b.getTitle() + " - $" + b.getPrice())
                 .collect(Collectors.toList());
@@ -94,7 +94,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<String> findAllBooksNotReleaseInGivenYear(String year) {
-        return bookRepository.findByReleaseDateYearNot(year);
+        return bookRepository.findByReleaseDateYearNot(year).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
@@ -102,6 +102,7 @@ public class BookServiceImpl implements BookService {
         LocalDate releaseDate = extractDate(DATE_FORMAT_RELEASE_BEFORE, dateFromConsole);
 
         return bookRepository.findByReleaseDateBefore(releaseDate)
+                .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(b -> String.format(FORMAT_BOOKS_RELEASE_DATE_BEFORE,
                         b.getTitle(), b.getEditionType(), b.getPrice()))
@@ -111,6 +112,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<String> findAllTitleContainString(String contains) {
         return bookRepository.findByTitleContains(contains)
+                .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(Book::getTitle)
                 .collect(Collectors.toList());
@@ -118,14 +120,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public String findCountBookTitleLongerThan(int length) {
-        int count = bookRepository.countByTitleCharLengthLongerThan(length);
+        int count = bookRepository.countByTitleCharLengthLongerThan(length).orElseThrow(NoSuchElementException::new);
 
         return String.format(FORMAT_COUNT_BOOK_TITLE_LONGER, count, length);
     }
 
     @Override
     public String bookTitleTypeRestrictionPrice(String title) {
-        return bookRepository.bookWithTitleTypeRestrictionPrice(title).info();
+        return bookRepository.bookWithTitleTypeRestrictionPrice(title)
+                .orElseThrow(NoSuchElementException::new)
+                .info();
     }
 
     @Override
@@ -133,12 +137,12 @@ public class BookServiceImpl implements BookService {
 
         LocalDate releaseDate = extractDate(DATE_FORMAT_INCREASE_COPIES, dateFromConsole);
 
-        return bookRepository.updateCopiesReleaseDateAfter(copies, releaseDate);
+        return bookRepository.updateCopiesReleaseDateAfter(copies, releaseDate).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
     public Integer deleteBooksCopiesLoverThen(int copies) {
-        return bookRepository.deleteByCopiesLessThan(copies);
+        return bookRepository.deleteByCopiesLessThan(copies).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
@@ -146,7 +150,7 @@ public class BookServiceImpl implements BookService {
         String[] nameParts = name.split("\\s+");
         String firstName = nameParts[0];
         String lastName = nameParts[1];
-        return bookRepository.udpBooksWrittenBy(firstName, lastName);
+        return bookRepository.countBooksWrittenByAuthorStoredProcedure(firstName, lastName);
     }
 
     private LocalDate extractDate(String date_format, String dateFromConsole) {
