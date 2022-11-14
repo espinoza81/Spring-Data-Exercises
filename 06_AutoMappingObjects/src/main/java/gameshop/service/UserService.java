@@ -1,17 +1,25 @@
 package gameshop.service;
 
-import gameshop.model.dto.UserDTO;
-import gameshop.model.entity.User;
-
-import java.util.List;
-import java.util.Optional;
+import gameshop.domain.user.LoginDTO;
+import gameshop.domain.user.RegisterUserDto;
+import gameshop.domain.user.User;
 
 public interface UserService {
-    long userRepoSize();
+    boolean userExistEmail(String email);
 
-    void save(User user);
+    String logout();
 
-    List<String> validateUserPart(String email, String password, String confirmPassword);
+    User login(LoginDTO loginDTO);
 
-    Optional<UserDTO> userExist(String email, String password);
+    User register(RegisterUserDto registerUserDto);
+
+    User getCurrentLoggedUser();
+
+    String addItem(String title);
+
+    String removeItem(String title);
+
+    String byItem();
+
+    String ownedGames();
 }

@@ -1,14 +1,23 @@
 package gameshop.service;
 
-import gameshop.model.entity.Game;
-
-import java.math.BigDecimal;
-import java.util.List;
+import gameshop.domain.game.Game;
+import gameshop.domain.game.GameNameDTO;
+import gameshop.domain.game.RegisterGameDTO;
+import java.util.Optional;
 
 public interface GameService {
+    boolean gameWithTitleExist(String title);
 
-    List<String> validateGamePart(String title, BigDecimal price, double sizeInMB,
-        String youtubeId, String imageThumbnailURL, String description);
+    Game register(RegisterGameDTO registerGameDTO);
 
-    void save(Game game);
+    Optional<Game> getByIdAndNotDeleted(Long id);
+
+    String editGame(String[] input);
+
+
+    GameNameDTO deleteGame(long id);
+
+    String allGames();
+
+    String detailsGame(String title);
 }

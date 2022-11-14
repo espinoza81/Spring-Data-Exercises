@@ -26,7 +26,7 @@ public class OutputMessages {
     public static final String UNDER_CONSTRUCTION = "Under construction";
 
     public static final String USER_REGISTER_SUCCESS = "%s was registered";
-    public static final String USER_EXIST = "User already exist";
+    public static final String USER_WITH_EMAIL_EXIST = "User with this e-mail already exist";
     public static final String SUCCESSFUL_LOGIN = "Successfully logged in %s";
     public static final String INCORRECT_USERNAME_PASSWORD = "Incorrect username / password";
     public static final String NO_LOGGED_USER = "Cannot log out. No user was logged in.";
@@ -44,4 +44,15 @@ public class OutputMessages {
     public static final String DESCRIPTION_TOO_SHORT = "Description too short!";
     public static final String GAME_EXIST = "Game with this title already exist";
     public static final String SUCCESSFUL_ADD_GAME = "Added %s";
+    public static final String SUCCESSFUL_EDITED_GAME = "Edited %s";
+    public static final String SUCCESSFUL_DELETE_GAME = "Deleted %s";
+    public static final String GAME_NOT_EXIST = "No game with id %d, or the game is deleted from catalogue";
+    public static final String GAME_WITH_TITLE_NOT_EXIST = "No game with this title, or the game is deleted from catalogue";
+    public static final String NO_SUCH_FIELD = "No such property";
+    public static final String EXIT_PROGRAM = "You are exit the program";
+    public static final String BY_ITEM = "Successfully bought games: %n%s";
+    public static final String REMOVE_ITEM = "%s removed from cart.";
+    public static final String ADD_ITEM = "%s added to cart.";
+    public static final String USER_HAVE_GAME = "User already have the game.";
+    public static final String NO_ITEM_IN_CART = "There are no games in the shopping cart";
 }
