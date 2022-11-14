@@ -52,7 +52,7 @@ public class ExecutorServiceImpl implements ExecutorService {
             case OWNED_GAMES -> userService.ownedGames();
             case ADD_ITEM -> userService.addItem(input[1]);
             case REMOVE_ITEM -> userService.removeItem(input[1]);
-            case BUE_ITEM -> userService.byItem();
+            case BUE_ITEM -> userService.buyItem();
             case END -> END;
             default -> OutputMessages.NO_SUCH_MENU;
         };

@@ -75,6 +75,10 @@ public class User{
     }
 
     public Set<Game> getGames() {
-        return Collections.unmodifiableSet(games);
+        return games;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

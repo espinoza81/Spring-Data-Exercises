@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import java.util.Set;
 public interface GameRepository extends JpaRepository<Game, Long> {
     int countByTitle(String title);
     int countByTitleAndDeletedFalse(String title);
+//    Optional<Game> findByTitleAndDeletedFalse(String title);
 
     Optional<Game> findByIdAndDeletedFalse(Long id);
 
@@ -32,4 +34,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     Set<GameNamePriceDTO> selectAllTitleAndPrice();
 
     Optional<GameDetails> findByTitle(String title);
+
+    Set<Game> findByTitleIn(Collection<String> cart);
 }

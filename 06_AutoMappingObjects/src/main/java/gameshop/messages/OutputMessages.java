@@ -55,4 +55,5 @@ public class OutputMessages {
     public static final String ADD_ITEM = "%s added to cart.";
     public static final String USER_HAVE_GAME = "User already have the game.";
     public static final String NO_ITEM_IN_CART = "There are no games in the shopping cart";
+    public static final String NO_SUCH_GAME_IN_CART = "There is no game with this title in the shopping cart";
 }

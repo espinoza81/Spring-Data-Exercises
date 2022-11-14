@@ -19,7 +19,7 @@ public interface UserService {
 
     String removeItem(String title);
 
-    String byItem();
+    String buyItem();
 
     String ownedGames();
 }

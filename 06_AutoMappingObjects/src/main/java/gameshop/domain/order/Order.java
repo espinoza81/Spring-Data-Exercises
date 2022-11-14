@@ -24,16 +24,16 @@ public class Order{
     private User buyer;
 
     @ManyToMany
-    private final Set<Game> products;
+    private Set<Game> products;
 
-    public Order(User buyer) {
+    public Order(User buyer, Set<Game> gameToBuy) {
         this();
-
+        this.products = gameToBuy;
         this.buyer = buyer;
     }
 
     public Order() {
-        this.products = new HashSet<>();
+
         this.date = LocalDate.now();
     }
 

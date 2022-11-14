@@ -1,17 +1,20 @@
 package gameshop.service.impl;
 
-import gameshop.domain.game.GameNameDTO;
+import gameshop.domain.game.Game;
+import gameshop.domain.order.Order;
 import gameshop.domain.user.LoginDTO;
 import gameshop.domain.user.RegisterUserDto;
 import gameshop.exceptions.ValidationException;
 import gameshop.messages.OutputMessages;
 import gameshop.domain.user.User;
 import gameshop.repository.GameRepository;
+import gameshop.repository.OrderRepository;
 import gameshop.repository.UserRepository;
 import gameshop.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -24,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final GameRepository gameRepository;
+    private final OrderRepository orderRepository;
     private final ModelMapper mapper;
     private User currentUser;
 
@@ -34,8 +38,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            GameRepository gameRepository,
-                           ModelMapper mapper) {
+                           OrderRepository orderRepository, ModelMapper mapper) {
         this.gameRepository = gameRepository;
+        this.orderRepository = orderRepository;
         this.currentUser = null;
         this.userRepository = userRepository;
         this.mapper = mapper;
@@ -46,27 +51,30 @@ public class UserServiceImpl implements UserService {
         return userRepository.countByEmail(email) > 0;
     }
 
+    @Transactional
     @Override
     public User login(LoginDTO loginDTO) {
 
-        checkLoggedUser(currentUser != null, OutputMessages.HAVE_LOGGED_USER);
+        checkLoggedUser(this.currentUser != null, OutputMessages.HAVE_LOGGED_USER);
 
         Optional<User> user = userRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
 
         if (user.isPresent()) {
             this.currentUser = user.get();
             this.cart = new HashSet<>();
-//            this.ownedGames = userRepository
-//                    .findUserGames(currentUser.getEmail())
-//                    .orElse(new HashSet<>())
-//                    .stream()
-//                    .map(GameNameDTO::getTitle)
-//                    .collect(Collectors.toSet());
+            this.ownedGames = getOwnedGames();
         } else {
             throw new ValidationException(OutputMessages.INCORRECT_USERNAME_PASSWORD);
         }
 
         return getCurrentLoggedUser();
+    }
+
+    private Set<String> getOwnedGames() {
+        return this.currentUser
+                .getGames().stream()
+                .map(Game::getTitle)
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -76,9 +84,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(RegisterUserDto registerUserDto) {
-        checkLoggedUser(currentUser != null, OutputMessages.HAVE_LOGGED_USER);
+        checkLoggedUser(this.currentUser != null, OutputMessages.HAVE_LOGGED_USER);
 
-        User toRegister = mapper.map(registerUserDto, User.class);
+        User toRegister = this.mapper.map(registerUserDto, User.class);
 
         long userCount = this.userRepository.count();
 
@@ -91,9 +99,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String logout() {
-        checkLoggedUser(currentUser == null, OutputMessages.NO_LOGGED_USER);
+        checkLoggedUser(this.currentUser == null, OutputMessages.NO_LOGGED_USER);
 
-        String loggedUserName = currentUser.getFullName();
+        String loggedUserName = this.currentUser.getFullName();
         this.currentUser = null;
         this.cart = null;
         this.ownedGames = null;
@@ -109,10 +117,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String removeItem(String title) {
-        checkLoggedUser(currentUser == null, OutputMessages.NO_USER_LOGGED_IN);
+        checkLoggedUser(this.currentUser == null, OutputMessages.NO_USER_LOGGED_IN);
 
         if(!this.cart.remove(title)) {
-            throw new ValidationException(OutputMessages.GAME_WITH_TITLE_NOT_EXIST);
+            throw new ValidationException(OutputMessages.NO_SUCH_GAME_IN_CART);
         }
 
         return String.format(OutputMessages.REMOVE_ITEM, title);
@@ -120,32 +128,48 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String addItem(String title) {
-        checkLoggedUser(currentUser == null, OutputMessages.NO_USER_LOGGED_IN);
+        checkLoggedUser(this.currentUser == null, OutputMessages.NO_USER_LOGGED_IN);
 
         int gameInStore = gameRepository.countByTitleAndDeletedFalse(title);
 
         if(gameInStore <=0 ) {
             throw new ValidationException(OutputMessages.GAME_WITH_TITLE_NOT_EXIST);
         }
-
-        if(ownedGames.contains(title)){
+        
+        if(this.ownedGames.contains(title)){
             throw new ValidationException(OutputMessages.USER_HAVE_GAME);
         }
 
         this.cart.add(title);
+        
         return String.format(OutputMessages.ADD_ITEM, title);
     }
 
+    @Transactional
     @Override
-    public String byItem() {
-        checkLoggedUser(currentUser == null, OutputMessages.NO_USER_LOGGED_IN);
+    public String buyItem() {
+        checkLoggedUser(this.currentUser == null, OutputMessages.NO_USER_LOGGED_IN);
 
         if(this.cart.isEmpty()) {
             throw new ValidationException(OutputMessages.NO_ITEM_IN_CART);
         }
 
+        Set<Game> gameToBuy = gameRepository.findByTitleIn(this.cart);
 
-        return String.format(OutputMessages.BY_ITEM, "none");
+        this.currentUser.getGames().addAll(gameToBuy);
+        userRepository.save(this.currentUser);
+        this.ownedGames = getOwnedGames();
+
+        Order order = new Order(this.currentUser, gameToBuy);
+
+        orderRepository.save(order);
+
+        this.cart.clear();
+
+        return String.format(OutputMessages.BY_ITEM,
+                gameToBuy.stream()
+                        .map(g -> "\t-" + g.getTitle())
+                        .collect(Collectors.joining(System.lineSeparator())));
     }
 
     @Override
