@@ -5,9 +5,7 @@ import productshop.constant.MenuLines;
 import productshop.constant.OutputMessages;
 import productshop.constant.PathFiles;
 import productshop.domain.category.CategoryCountProductsDto;
-import productshop.domain.product.ProductWithoutBuyerDto;
 import productshop.domain.product.XMLProductWithoutBuyerDto;
-import productshop.domain.user.UserSoldProductsDto;
 import productshop.domain.user.UsersCountWrapperDto;
 import productshop.domain.user.XMLUsersSoldProductsWrapperDto;
 import productshop.service.CategoryService;
@@ -90,11 +88,7 @@ public class ExecutorServiceImpl implements ExecutorService {
 
  //       this.writeJsonToFile(userSoldProducts, PathFiles.USER_SOLD_PRODUCTS_FILE_PATH_JSON);
 
-        final File file = PathFiles.USER_SOLD_PRODUCTS_FILE_PATH_XML.toFile();
-        final JAXBContext context = JAXBContext.newInstance(XMLUsersSoldProductsWrapperDto.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.marshal(userSoldProducts, file);
+        this.writeXMLToFile(userSoldProducts, PathFiles.USER_SOLD_PRODUCTS_FILE_PATH_XML);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
                 PathFiles.OUT_PATH_JSON + PathFiles.USERS_SOLD_PRODUCTS_XML;
@@ -112,17 +106,13 @@ public class ExecutorServiceImpl implements ExecutorService {
 
 //        this.writeJsonToFile(allWithoutBuyer, PathFiles.PRODUCTS_WITHOUT_BUYER_FILE_PATH_JSON);
 
-        final File file = PathFiles.PRODUCTS_WITHOUT_BUYER_FILE_PATH_XML.toFile();
-        final JAXBContext context = JAXBContext.newInstance(XMLProductWithoutBuyerDto.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.marshal(allWithoutBuyer, file);
+        this.writeXMLToFile(allWithoutBuyer, PathFiles.PRODUCTS_WITHOUT_BUYER_FILE_PATH_XML);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
                 PathFiles.OUT_PATH_XML + PathFiles.PRODUCT_IN_RANGE_XML;
     }
 
-    public void writeJsonToFile(Object object, Path filePath) throws IOException {
+    public <T> void writeJsonToFile(T object, Path filePath) throws IOException {
         final FileWriter fileWriter = new FileWriter(filePath.toFile());
 
         gson.toJson(object, fileWriter);
@@ -130,6 +120,16 @@ public class ExecutorServiceImpl implements ExecutorService {
         fileWriter.flush();
         fileWriter.close();
 
+    }
+
+    public <T> void writeXMLToFile(T data, Path filePath) throws JAXBException {
+
+        final File file = filePath.toFile();
+
+        final JAXBContext context = JAXBContext.newInstance(data.getClass());
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.marshal(data, file);
     }
 
     private void printMainMenu() {
