@@ -1,6 +1,7 @@
 package productshop.service;
 
 import productshop.domain.product.ProductWithoutBuyerDto;
+import productshop.domain.product.XMLProductWithoutBuyerDto;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -10,5 +11,5 @@ public interface ProductService {
 
     void seedProducts() throws IOException, JAXBException;
 
-    List<ProductWithoutBuyerDto> findAllWithoutBuyer(double bottom, double top);
+    XMLProductWithoutBuyerDto findAllWithoutBuyer(double bottom, double top);
 }

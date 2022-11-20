@@ -25,6 +25,10 @@ public class ProductDto {
         return new ProductWithoutBuyerDto(name, price, seller.getFullName());
     }
 
+    public XMLProductWithBayerNameDto xmlProductWithBuyerDto(){
+        return new XMLProductWithBayerNameDto(name, price, seller.getFullName());
+    }
+
     public ProductImportDto ProductImportDto(){
         return new ProductImportDto(name, price);
     }

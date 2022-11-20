@@ -6,8 +6,10 @@ import productshop.constant.OutputMessages;
 import productshop.constant.PathFiles;
 import productshop.domain.category.CategoryCountProductsDto;
 import productshop.domain.product.ProductWithoutBuyerDto;
+import productshop.domain.product.XMLProductWithoutBuyerDto;
 import productshop.domain.user.UserSoldProductsDto;
 import productshop.domain.user.UsersCountWrapperDto;
+import productshop.domain.user.XMLUsersSoldProductsWrapperDto;
 import productshop.service.CategoryService;
 import productshop.service.ExecutorService;
 import productshop.service.ProductService;
@@ -15,6 +17,10 @@ import productshop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -43,7 +49,7 @@ public class ExecutorServiceImpl implements ExecutorService {
     }
 
     @Override
-    public String executeCommand() throws IOException {
+    public String executeCommand() throws IOException, JAXBException {
 
         printMainMenu();
 
@@ -79,16 +85,22 @@ public class ExecutorServiceImpl implements ExecutorService {
                 PathFiles.OUT_PATH_JSON + PathFiles.CATEGORIES_BY_PRODUCTS_JSON;
     }
 
-    private String _02_soldProductWithBuyers() throws IOException {
-        List<UserSoldProductsDto> userSoldProducts = this.userService.findUsersWithSoldProducts();
+    private String _02_soldProductWithBuyers() throws IOException, JAXBException {
+        XMLUsersSoldProductsWrapperDto userSoldProducts = this.userService.findUsersWithSoldProducts();
 
-        this.writeJsonToFile(userSoldProducts, PathFiles.USER_SOLD_PRODUCTS_FILE_PATH_JSON);
+ //       this.writeJsonToFile(userSoldProducts, PathFiles.USER_SOLD_PRODUCTS_FILE_PATH_JSON);
+
+        final File file = PathFiles.USER_SOLD_PRODUCTS_FILE_PATH_XML.toFile();
+        final JAXBContext context = JAXBContext.newInstance(XMLUsersSoldProductsWrapperDto.class);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.marshal(userSoldProducts, file);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
-                PathFiles.OUT_PATH_JSON + PathFiles.USERS_SOLD_PRODUCTS_JSON;
+                PathFiles.OUT_PATH_JSON + PathFiles.USERS_SOLD_PRODUCTS_XML;
     }
 
-    private String _01_allProductsWithoutBuyer() throws IOException {
+    private String _01_allProductsWithoutBuyer() throws IOException, JAXBException {
 
         System.out.println(OutputMessages.BOTTOM_PRICE_RANGE);
         double bottom = Double.parseDouble(scanner.nextLine());
@@ -96,12 +108,18 @@ public class ExecutorServiceImpl implements ExecutorService {
         System.out.println(OutputMessages.TOP_PRICE_RANGE);
         double top = Double.parseDouble(scanner.nextLine());
 
-        List<ProductWithoutBuyerDto> allWithoutBuyer = this.productService.findAllWithoutBuyer(bottom, top);
+        final XMLProductWithoutBuyerDto allWithoutBuyer = this.productService.findAllWithoutBuyer(bottom, top);
 
-        this.writeJsonToFile(allWithoutBuyer, PathFiles.PRODUCTS_WITHOUT_BUYER_FILE_PATH_JSON);
+//        this.writeJsonToFile(allWithoutBuyer, PathFiles.PRODUCTS_WITHOUT_BUYER_FILE_PATH_JSON);
+
+        final File file = PathFiles.PRODUCTS_WITHOUT_BUYER_FILE_PATH_XML.toFile();
+        final JAXBContext context = JAXBContext.newInstance(XMLProductWithoutBuyerDto.class);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.marshal(allWithoutBuyer, file);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
-                PathFiles.OUT_PATH_JSON + PathFiles.PRODUCT_IN_RANGE_JSON;
+                PathFiles.OUT_PATH_XML + PathFiles.PRODUCT_IN_RANGE_XML;
     }
 
     public void writeJsonToFile(Object object, Path filePath) throws IOException {

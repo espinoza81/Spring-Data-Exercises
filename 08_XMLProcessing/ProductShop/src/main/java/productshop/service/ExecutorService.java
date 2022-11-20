@@ -1,7 +1,8 @@
 package productshop.service;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 
 public interface ExecutorService {
-    String executeCommand() throws IOException;
+    String executeCommand() throws IOException, JAXBException;
 }

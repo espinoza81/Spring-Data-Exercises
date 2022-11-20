@@ -51,10 +51,10 @@ public class ProductServiceImpl implements ProductService {
 
             final FileReader fileReader = new FileReader(PathFiles.PRODUCTS_FILE_PATH_XML.toFile());
 
-            final JAXBContext context = JAXBContext.newInstance(ProductImportXMLDto.class);
+            final JAXBContext context = JAXBContext.newInstance(XMLProductImportDto.class);
             final Unmarshaller unmarshaller = context.createUnmarshaller();
 
-            ProductImportXMLDto productsXML = (ProductImportXMLDto) unmarshaller.unmarshal(fileReader);
+            XMLProductImportDto productsXML = (XMLProductImportDto) unmarshaller.unmarshal(fileReader);
 
             List<Product> products = productsXML.getProducts()
                     .stream()
@@ -79,17 +79,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductWithoutBuyerDto> findAllWithoutBuyer(double bottom, double top) {
+    public XMLProductWithoutBuyerDto findAllWithoutBuyer(double bottom, double top) {
         BigDecimal bottom_price = BigDecimal.valueOf(bottom);
         BigDecimal top_price = BigDecimal.valueOf(top);
 
-        return this.productRepository
+        final List<XMLProductWithBayerNameDto> productXML = this.productRepository
                 .findByBuyerNullAndPriceBetweenOrderByPrice(bottom_price, top_price)
                 .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(product -> mapper.map(product, ProductDto.class))
-                .map(ProductDto::productWithoutBuyerDto)
+                .map(ProductDto::xmlProductWithBuyerDto)
                 .toList();
+
+        return new XMLProductWithoutBuyerDto(productXML);
     }
 
     private Product setRandomCategories(Product product) {

@@ -9,24 +9,16 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@XmlRootElement(name = "product")
+@XmlRootElement(name = "sold-product")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ProductWithBayerNameDto {
-    @XmlElement
-    private String name;
+public class XMLSoldProductsWrapperDto {
 
-    @XmlElement
-    private BigDecimal price;
-
-    @XmlElement(name = "buyer-first-name")
-    private String buyerFirstName;
-
-    @XmlElement(name = "buyer-last-name")
-    private String buyerLastName;
+    @XmlElement(name = "product")
+    private List<ProductWithBayerNameDto> products;
 }

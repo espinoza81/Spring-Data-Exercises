@@ -1,4 +1,4 @@
-package productshop.domain.product;
+package productshop.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,24 +9,17 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@XmlRootElement(name = "product")
+@XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ProductWithBayerNameDto {
-    @XmlElement
-    private String name;
+public class XMLUsersSoldProductsWrapperDto {
 
-    @XmlElement
-    private BigDecimal price;
+    @XmlElement(name = "user")
+    private List<XMLUserSoldProductsDto> users;
 
-    @XmlElement(name = "buyer-first-name")
-    private String buyerFirstName;
-
-    @XmlElement(name = "buyer-last-name")
-    private String buyerLastName;
 }

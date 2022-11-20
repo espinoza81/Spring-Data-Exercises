@@ -64,20 +64,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserSoldProductsDto> findUsersWithSoldProducts() {
+    public XMLUsersSoldProductsWrapperDto findUsersWithSoldProducts() {
 
-        List<UserSoldProductsDto> userSoldProductsDtos = this.userRepository
+        List<XMLUserSoldProductsDto> userSoldProductsDtos = this.userRepository
                 .findAllByOrderByLastNameAscFirstNameAsc()
                 .orElseThrow(NoSuchElementException::new)
                 .stream()
-                .map(user -> mapper.map(user, UserSoldProductsDto.class))
+                .map(user -> mapper.map(user, XMLUserSoldProductsDto.class))
                 .toList();
 
         userSoldProductsDtos
-                .forEach(u -> u.getSoldProducts()
-                        .removeIf(p -> p.getBuyerFirstName() == null && p.getBuyerLastName() == null));
+                .forEach(u ->
+                        u.getSoldProducts()
+                                .getProducts()
+                                .removeIf(p -> p.getBuyerFirstName() == null && p.getBuyerLastName() == null));
 
-        return userSoldProductsDtos;
+        return new XMLUsersSoldProductsWrapperDto(userSoldProductsDtos);
     }
 
     @Override

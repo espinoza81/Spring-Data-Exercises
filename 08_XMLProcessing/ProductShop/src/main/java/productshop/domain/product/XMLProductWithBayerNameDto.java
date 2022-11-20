@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.math.BigDecimal;
 
@@ -17,16 +17,14 @@ import java.math.BigDecimal;
 @Setter
 @XmlRootElement(name = "product")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ProductWithBayerNameDto {
-    @XmlElement
+public class XMLProductWithBayerNameDto {
+
+    @XmlAttribute
     private String name;
 
-    @XmlElement
+    @XmlAttribute
     private BigDecimal price;
 
-    @XmlElement(name = "buyer-first-name")
-    private String buyerFirstName;
-
-    @XmlElement(name = "buyer-last-name")
-    private String buyerLastName;
+    @XmlAttribute
+    private String  seller;
 }
