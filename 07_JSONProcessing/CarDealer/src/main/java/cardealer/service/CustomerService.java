@@ -1,6 +1,7 @@
 package cardealer.service;
 
 import cardealer.domain.custumer.CustomerOrderBirthdateDto;
+import cardealer.domain.custumer.CustomerTotalSalesDto;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,4 +11,6 @@ public interface CustomerService {
     void seedCustomers() throws IOException;
 
     List<CustomerOrderBirthdateDto> getAllCustomers();
+
+    List<CustomerTotalSalesDto> getAllWithTotalSales();
 }

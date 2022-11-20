@@ -1,10 +1,7 @@
 package cardealer.service.impl;
 
 import cardealer.constant.PathFiles;
-import cardealer.domain.custumer.Customer;
-import cardealer.domain.custumer.CustomerDto;
-import cardealer.domain.custumer.CustomerImportDto;
-import cardealer.domain.custumer.CustomerOrderBirthdateDto;
+import cardealer.domain.custumer.*;
 import cardealer.domain.sale.Sale;
 import cardealer.repository.CustomerRepository;
 import cardealer.service.CustomerService;
@@ -57,13 +54,13 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(customer -> mapper.map(customer, CustomerOrderBirthdateDto.class))
-//                .map(this::removeSales)
                 .toList();
     }
 
-    public CustomerOrderBirthdateDto removeSales(CustomerOrderBirthdateDto customer){
-        customer.setSales(new Sale[0]);
-
-        return customer;
+    @Override
+    public List<CustomerTotalSalesDto> getAllWithTotalSales() {
+        return this.customerRepository
+                .getAllCustomersWithTotalSale()
+                .orElseThrow(NoSuchElementException::new);
     }
 }

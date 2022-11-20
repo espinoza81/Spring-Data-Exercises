@@ -4,6 +4,7 @@ import cardealer.constant.PathFiles;
 import cardealer.domain.car.CarToyotaDto;
 import cardealer.domain.car.CarWithPartsDto;
 import cardealer.domain.custumer.CustomerOrderBirthdateDto;
+import cardealer.domain.custumer.CustomerTotalSalesDto;
 import cardealer.domain.supplier.LocalSupplierDto;
 import cardealer.service.CarService;
 import cardealer.service.CustomerService;
@@ -58,12 +59,21 @@ public class ExecutorServiceImpl implements ExecutorService {
             case 2 -> _02_allCarsFromToyota();
             case 3 -> _03_allLocalSuppliers();
             case 4 -> _04_allCarsWithParts();
-//            case 5 -> _05_usersAndSoldProducts();
+            case 5 -> _05_getCustomersTotalSales();
 //            case 6 -> _06_usersAndSoldProducts();
             default -> OutputMessages.NO_SUCH_MENU;
         };
 
         return result.trim();
+    }
+
+    private String _05_getCustomersTotalSales() throws IOException {
+        List<CustomerTotalSalesDto> customers = this.customerService.getAllWithTotalSales();
+
+        this.writeJsonToFile(customers, PathFiles.CUSTOMER_TOTAL_SALES_FILE_PATH);
+
+        return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
+                PathFiles.OUT_PATH + PathFiles._05_CUSTOMER_TOTAL_SALES;
     }
 
     private String _04_allCarsWithParts() throws IOException {
@@ -121,7 +131,7 @@ public class ExecutorServiceImpl implements ExecutorService {
                 append(MenuLines.MENU_PROBLEM_02).append(System.lineSeparator()).
                 append(MenuLines.MENU_PROBLEM_03).append(System.lineSeparator()).
                 append(MenuLines.MENU_PROBLEM_04).append(System.lineSeparator()).
-//                append(MenuLines.MENU_PROBLEM_05).append(System.lineSeparator()).
+                append(MenuLines.MENU_PROBLEM_05).append(System.lineSeparator()).
 //                append(MenuLines.MENU_PROBLEM_06).append(System.lineSeparator()).
         append(MenuLines.MENU_EXIT).append(System.lineSeparator()).
                 append(MenuLines.MENU_BOTTOM);
