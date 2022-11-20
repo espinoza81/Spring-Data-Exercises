@@ -3,6 +3,7 @@ package cardealer.service.impl;
 import cardealer.constant.PathFiles;
 import cardealer.domain.car.Car;
 import cardealer.domain.car.CarImportDto;
+import cardealer.domain.car.CarToyotaDto;
 import cardealer.domain.part.Part;
 import cardealer.repository.CarRepository;
 import cardealer.repository.PartRepository;
@@ -48,6 +49,16 @@ public class CarServiceImpl implements CarService {
 
             this.carRepository.saveAllAndFlush(cars);
         }
+    }
+
+    @Override
+    public List<CarToyotaDto> getAllCarsByMaker(String maker) {
+        return this.carRepository
+                .findByMakeOrderByModelAscTravelledDistanceDesc(maker)
+                .orElseThrow(NoSuchElementException::new)
+                .stream()
+                .map(car -> mapper.map(car, CarToyotaDto.class))
+                .toList();
     }
 
     public Car setRandomParts(Car car){

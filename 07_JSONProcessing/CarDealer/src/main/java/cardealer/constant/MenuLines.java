@@ -5,8 +5,8 @@ public class MenuLines {
     public static final String MENU_BOTTOM = "Please enter a number:";
     public static final String MENU_EXIT = "0. Exit";
     public static final String MENU_PROBLEM_01 =
-            "1. List all products in a price range, which have no buyer.";
-    public static final String MENU_PROBLEM_02 = "2. List of users with theirs sold products and buyers";
-    public static final String MENU_PROBLEM_03 = "3. List of categories with total sold products";
+            "1. List all customers, ordered by their birthdate";
+    public static final String MENU_PROBLEM_02 = "2. List all cars from make Toyota";
+    public static final String MENU_PROBLEM_03 = "3. List all suppliers that do not import parts from abroad.";
     public static final String MENU_PROBLEM_04 = "4. List of users with theirs sold products";
 }

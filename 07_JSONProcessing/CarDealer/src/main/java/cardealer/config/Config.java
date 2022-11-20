@@ -11,10 +11,10 @@ import java.util.Scanner;
 @Configuration
 public class Config {
 
-    @Bean
-    public ModelMapper createModelMapper() {
-        return new ModelMapper();
-    }
+//    @Bean
+//    public ModelMapper createModelMapper() {
+//        return new ModelMapper();
+//    }
 
     @Bean
     public Scanner createScanner() {

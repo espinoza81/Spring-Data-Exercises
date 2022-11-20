@@ -1,6 +1,7 @@
 package cardealer.service.impl;
 
 import cardealer.constant.PathFiles;
+import cardealer.domain.supplier.LocalSupplierDto;
 import cardealer.domain.supplier.Supplier;
 import cardealer.domain.supplier.SupplierImportDto;
 import cardealer.repository.SupplierRepository;
@@ -14,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class SupplierServiceImpl implements SupplierService {
@@ -45,5 +47,12 @@ public class SupplierServiceImpl implements SupplierService {
 
             this.supplierRepository.saveAllAndFlush(suppliers);
         }
+    }
+
+    @Override
+    public List<LocalSupplierDto> getAllLocalSuppliers() {
+        return this.supplierRepository
+                .getLocalSupplierPartCount()
+                .orElseThrow(NoSuchElementException::new);
     }
 }

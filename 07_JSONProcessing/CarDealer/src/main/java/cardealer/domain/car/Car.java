@@ -34,13 +34,6 @@ public class Car extends BaseEntity {
     @ManyToMany
     Set<Part> parts;
 
-    public BigDecimal getCarPrice(){
-        return parts
-                .stream()
-                .map(Part::getPrice)
-                .reduce(BigDecimal.ONE, BigDecimal::add );
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
