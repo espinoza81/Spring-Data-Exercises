@@ -5,14 +5,12 @@ import cardealer.domain.car.CarToyotaDto;
 import cardealer.domain.car.CarWithPartsDto;
 import cardealer.domain.custumer.CustomerOrderBirthdateDto;
 import cardealer.domain.custumer.CustomerTotalSalesDto;
+import cardealer.domain.sale.SaleWithDiscountDto;
 import cardealer.domain.supplier.LocalSupplierDto;
-import cardealer.service.CarService;
-import cardealer.service.CustomerService;
-import cardealer.service.SupplierService;
+import cardealer.service.*;
 import com.google.gson.Gson;
 import cardealer.constant.MenuLines;
 import cardealer.constant.OutputMessages;
-import cardealer.service.ExecutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +28,7 @@ public class ExecutorServiceImpl implements ExecutorService {
     private final CustomerService customerService;
     private final CarService carService;
     private final SupplierService supplierService;
+    private final SaleService saleService;
 
 
     @Autowired
@@ -38,12 +37,14 @@ public class ExecutorServiceImpl implements ExecutorService {
             Gson gson,
             CustomerService customerService,
             CarService carService,
-            SupplierService supplierService) {
+            SupplierService supplierService,
+            SaleService saleService) {
         this.scanner = scanner;
         this.gson = gson;
         this.customerService = customerService;
         this.carService = carService;
         this.supplierService = supplierService;
+        this.saleService = saleService;
     }
 
     @Override
@@ -60,11 +61,20 @@ public class ExecutorServiceImpl implements ExecutorService {
             case 3 -> _03_allLocalSuppliers();
             case 4 -> _04_allCarsWithParts();
             case 5 -> _05_getCustomersTotalSales();
-//            case 6 -> _06_usersAndSoldProducts();
+            case 6 -> _06_salesWithDiscount();
             default -> OutputMessages.NO_SUCH_MENU;
         };
 
         return result.trim();
+    }
+
+    private String _06_salesWithDiscount() throws IOException {
+        List<SaleWithDiscountDto> sales = this.saleService.getAllSalesWithDiscount();
+
+        this.writeJsonToFile(sales, PathFiles.SALES_DISCOUNTS_FILE_PATH);
+
+        return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
+                PathFiles.OUT_PATH + PathFiles._06_SALES_DISCOUNTS;
     }
 
     private String _05_getCustomersTotalSales() throws IOException {
@@ -132,7 +142,7 @@ public class ExecutorServiceImpl implements ExecutorService {
                 append(MenuLines.MENU_PROBLEM_03).append(System.lineSeparator()).
                 append(MenuLines.MENU_PROBLEM_04).append(System.lineSeparator()).
                 append(MenuLines.MENU_PROBLEM_05).append(System.lineSeparator()).
-//                append(MenuLines.MENU_PROBLEM_06).append(System.lineSeparator()).
+                append(MenuLines.MENU_PROBLEM_06).append(System.lineSeparator()).
         append(MenuLines.MENU_EXIT).append(System.lineSeparator()).
                 append(MenuLines.MENU_BOTTOM);
 

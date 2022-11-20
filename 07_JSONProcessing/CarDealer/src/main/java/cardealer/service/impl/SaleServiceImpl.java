@@ -4,6 +4,8 @@ import cardealer.constant.Discount;
 import cardealer.domain.car.Car;
 import cardealer.domain.custumer.Customer;
 import cardealer.domain.sale.Sale;
+import cardealer.domain.sale.SaleDto;
+import cardealer.domain.sale.SaleWithDiscountDto;
 import cardealer.repository.CarRepository;
 import cardealer.repository.CustomerRepository;
 import cardealer.repository.SaleRepository;
@@ -13,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.LongStream;
 
@@ -70,5 +73,16 @@ public class SaleServiceImpl implements SaleService {
 
             this.saleRepository.saveAllAndFlush(sales);
         }
+    }
+
+    @Override
+    @Transactional
+    public List<SaleWithDiscountDto> getAllSalesWithDiscount() {
+        return this.saleRepository
+                .findAll()
+                .stream()
+                .map(sale -> mapper.map(sale, SaleDto.class))
+                .map(SaleDto::saleWithDiscountDto)
+                .toList();
     }
 }
