@@ -3,7 +3,6 @@ package cardealer.domain.sale;
 import cardealer.domain.BaseEntity;
 import cardealer.domain.car.Car;
 import cardealer.domain.custumer.Customer;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -30,4 +28,18 @@ public class Sale extends BaseEntity {
 
     @ManyToOne(optional = false)
     private Customer customer;
+
+    public Sale(Integer discount, Car car, Customer customer) {
+        this.car = car;
+        this.customer = customer;
+        setDiscount(discount);
+    }
+
+    public void setDiscount(Integer discount) {
+        if(customer.isYoungDriver()) {
+            discount = discount + 5;
+        }
+
+        this.discount = discount;
+    }
 }

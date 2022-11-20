@@ -2,6 +2,7 @@ package cardealer.service.impl;
 
 import cardealer.constant.PathFiles;
 import cardealer.domain.car.CarToyotaDto;
+import cardealer.domain.car.CarWithPartsDto;
 import cardealer.domain.custumer.CustomerOrderBirthdateDto;
 import cardealer.domain.supplier.LocalSupplierDto;
 import cardealer.service.CarService;
@@ -56,7 +57,7 @@ public class ExecutorServiceImpl implements ExecutorService {
             case 1 -> _01_allCustomerOrderByBirthdate();
             case 2 -> _02_allCarsFromToyota();
             case 3 -> _03_allLocalSuppliers();
-//            case 4 -> _04_usersAndSoldProducts();
+            case 4 -> _04_allCarsWithParts();
 //            case 5 -> _05_usersAndSoldProducts();
 //            case 6 -> _06_usersAndSoldProducts();
             default -> OutputMessages.NO_SUCH_MENU;
@@ -65,14 +66,13 @@ public class ExecutorServiceImpl implements ExecutorService {
         return result.trim();
     }
 
-    private String _04_usersAndSoldProducts() throws IOException {
-//        UsersCountWrapperDto usersCountWrapperDto = this.userService.findUsersSoldProductsWithCount();
-//
-//        this.writeJsonToFile(usersCountWrapperDto, PathFiles.USER_AND_PRODUCTS_FILE_PATH);
-//
-//        return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
-//                PathFiles.OUT_PATH + PathFiles.USERS_AND_PRODUCTS;
-        return null;
+    private String _04_allCarsWithParts() throws IOException {
+        List<CarWithPartsDto> carWithPartsDtos = this.carService.getAllCarWithParts();
+
+        this.writeJsonToFile(carWithPartsDtos, PathFiles.CARS_AND_PARTS_FILE_PATH);
+
+        return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
+                PathFiles.OUT_PATH + PathFiles._04_CARS_AND_PARTS;
     }
 
     private String _03_allLocalSuppliers() throws IOException {
@@ -120,7 +120,7 @@ public class ExecutorServiceImpl implements ExecutorService {
                 append(MenuLines.MENU_PROBLEM_01).append(System.lineSeparator()).
                 append(MenuLines.MENU_PROBLEM_02).append(System.lineSeparator()).
                 append(MenuLines.MENU_PROBLEM_03).append(System.lineSeparator()).
-//                append(MenuLines.MENU_PROBLEM_04).append(System.lineSeparator()).
+                append(MenuLines.MENU_PROBLEM_04).append(System.lineSeparator()).
 //                append(MenuLines.MENU_PROBLEM_05).append(System.lineSeparator()).
 //                append(MenuLines.MENU_PROBLEM_06).append(System.lineSeparator()).
         append(MenuLines.MENU_EXIT).append(System.lineSeparator()).

@@ -7,6 +7,8 @@ public class MenuLines {
     public static final String MENU_PROBLEM_01 =
             "1. List all customers, ordered by their birthdate";
     public static final String MENU_PROBLEM_02 = "2. List all cars from make Toyota";
-    public static final String MENU_PROBLEM_03 = "3. List all suppliers that do not import parts from abroad.";
-    public static final String MENU_PROBLEM_04 = "4. List of users with theirs sold products";
+    public static final String MENU_PROBLEM_03 = "3. List all suppliers that do not import parts from abroad";
+    public static final String MENU_PROBLEM_04 = "4. List all cars along with their list of parts";
+    public static final String MENU_PROBLEM_05 = "5. List all cars along with their list of parts";
+    public static final String MENU_PROBLEM_06 = "6. List all cars along with their list of parts";
 }

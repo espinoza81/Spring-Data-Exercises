@@ -1,9 +1,7 @@
 package cardealer.service.impl;
 
 import cardealer.constant.PathFiles;
-import cardealer.domain.car.Car;
-import cardealer.domain.car.CarImportDto;
-import cardealer.domain.car.CarToyotaDto;
+import cardealer.domain.car.*;
 import cardealer.domain.part.Part;
 import cardealer.repository.CarRepository;
 import cardealer.repository.PartRepository;
@@ -12,6 +10,7 @@ import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -58,6 +57,17 @@ public class CarServiceImpl implements CarService {
                 .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(car -> mapper.map(car, CarToyotaDto.class))
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public List<CarWithPartsDto> getAllCarWithParts() {
+        return this.carRepository
+                .findAll()
+                .stream()
+                .map(car -> mapper.map(car, CarDto.class))
+                .map(CarDto::carWithPartsDto)
                 .toList();
     }
 

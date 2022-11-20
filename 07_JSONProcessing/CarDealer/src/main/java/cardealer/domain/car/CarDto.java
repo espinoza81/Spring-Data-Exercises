@@ -1,13 +1,16 @@
 package cardealer.domain.car;
 
 import cardealer.domain.part.PartDto;
+import cardealer.domain.part.PartWithNameDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,5 +28,21 @@ public class CarDto {
                 .stream()
                 .map(PartDto::getPrice)
                 .reduce(BigDecimal.ONE, BigDecimal::add );
+    }
+
+    public CarWithPartsDto carWithPartsDto(){
+        CarWithoutPartsDto car = new CarWithoutPartsDto(make, model, travelledDistance);
+
+        Set<PartWithNameDto> parts =
+                this.parts
+                        .stream()
+                        .map(CarDto::partWithNameDto)
+                        .collect(Collectors.toSet());
+
+        return new CarWithPartsDto(car, parts);
+    }
+
+    public static PartWithNameDto partWithNameDto(PartDto partDto){
+        return new PartWithNameDto(partDto.getName(), partDto.getPrice());
     }
 }

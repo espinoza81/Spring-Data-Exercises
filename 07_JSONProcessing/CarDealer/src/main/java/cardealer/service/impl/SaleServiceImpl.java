@@ -1,5 +1,6 @@
 package cardealer.service.impl;
 
+import cardealer.constant.Discount;
 import cardealer.domain.car.Car;
 import cardealer.domain.custumer.Customer;
 import cardealer.domain.sale.Sale;
@@ -48,7 +49,6 @@ public class SaleServiceImpl implements SaleService {
 
             final List<Sale> sales = new ArrayList<>();
             Set<Car> saleCars = new HashSet<>();
-            final List<Integer> discounts = List.of(0, 5, 10 , 15, 20, 30, 40, 50);
 
             LongStream.range(0, numberOfSales)
                     .forEach(number -> {
@@ -62,13 +62,7 @@ public class SaleServiceImpl implements SaleService {
 
                         Customer customer = this.customerRepository.getRandomEntity().orElseThrow(NoSuchElementException::new);
 
-                        final int discountIndex = random.nextInt(8);
-
-                        Integer discount = discounts.get(discountIndex);
-
-                        if(customer.isYoungDriver()) {
-                            discount = discount + 5;
-                        }
+                        Integer discount = Discount.getDiscount();
 
                         Sale newSale = new Sale(discount, car, customer);
                         sales.add(newSale);
