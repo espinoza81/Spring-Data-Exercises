@@ -3,10 +3,8 @@ package productshop.service.impl;
 import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import productshop.constant.PathFiles;
-import productshop.domain.category.Category;
-import productshop.domain.category.CategoryCountProductsDto;
-import productshop.domain.category.CategoryImportDto;
-import productshop.domain.category.CategoryImportXMLDto;
+import productshop.domain.category.*;
+import productshop.domain.user.XMLUsersSoldProductsWrapperDto;
 import productshop.repository.CategoryRepository;
 import productshop.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +64,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryCountProductsDto> allOrderByCountProducts() {
-        return this.categoryRepository.getCategoriesSummary()
+    public XMLCategoryCountProductsDto allOrderByCountProducts() {
+        final  List<CategoryCountProductsDto> categoryCountProducts = this.categoryRepository.getCategoriesSummary()
                 .orElseThrow(NoSuchElementException::new);
+        return new XMLCategoryCountProductsDto(categoryCountProducts);
     }
 }

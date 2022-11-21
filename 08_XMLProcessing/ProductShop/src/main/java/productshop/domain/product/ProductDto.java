@@ -32,4 +32,7 @@ public class ProductDto {
     public ProductImportDto ProductImportDto(){
         return new ProductImportDto(name, price);
     }
+    public XMLProductNamePriceAttributeDto XMLProductNamePriceAttributeDto(){
+        return new XMLProductNamePriceAttributeDto(name, price);
+    }
 }

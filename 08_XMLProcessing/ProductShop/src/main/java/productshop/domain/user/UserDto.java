@@ -7,6 +7,7 @@ import lombok.Setter;
 import productshop.domain.product.ProductDto;
 import productshop.domain.product.ProductImportDto;
 import productshop.domain.product.ProductWrapperDto;
+import productshop.domain.product.XMLProductNamePriceAttributeDto;
 
 import java.util.List;
 import java.util.Set;
@@ -38,11 +39,13 @@ public class UserDto {
     }
 
     public UserWrapperDetailsDto userWrapperDetailsDto(){
-        List<ProductImportDto> products = soldProducts
+        List<XMLProductNamePriceAttributeDto> products = soldProducts
                 .stream()
-                .map(ProductDto::ProductImportDto)
+                .map(ProductDto::XMLProductNamePriceAttributeDto)
                 .toList();
+
         ProductWrapperDto productWrapperDto = new ProductWrapperDto(products);
+
         return new UserWrapperDetailsDto(firstName, lastName, age, productWrapperDto);
     }
 }

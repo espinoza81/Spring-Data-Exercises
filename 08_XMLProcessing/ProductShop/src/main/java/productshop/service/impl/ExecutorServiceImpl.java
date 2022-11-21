@@ -5,6 +5,7 @@ import productshop.constant.MenuLines;
 import productshop.constant.OutputMessages;
 import productshop.constant.PathFiles;
 import productshop.domain.category.CategoryCountProductsDto;
+import productshop.domain.category.XMLCategoryCountProductsDto;
 import productshop.domain.product.XMLProductWithoutBuyerDto;
 import productshop.domain.user.UsersCountWrapperDto;
 import productshop.domain.user.XMLUsersSoldProductsWrapperDto;
@@ -65,22 +66,25 @@ public class ExecutorServiceImpl implements ExecutorService {
         return result.trim();
     }
 
-    private String _04_usersAndSoldProducts() throws IOException {
+    private String _04_usersAndSoldProducts() throws IOException, JAXBException {
         UsersCountWrapperDto usersCountWrapperDto = this.userService.findUsersSoldProductsWithCount();
 
-        this.writeJsonToFile(usersCountWrapperDto, PathFiles.USER_AND_PRODUCTS_FILE_PATH_JSON);
+//        this.writeJsonToFile(usersCountWrapperDto, PathFiles.USER_AND_PRODUCTS_FILE_PATH_JSON);
+
+        this.writeXMLToFile(usersCountWrapperDto, PathFiles.USER_AND_PRODUCTS_FILE_PATH_XML);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
-                PathFiles.OUT_PATH_JSON + PathFiles.USERS_AND_PRODUCTS_JSON;
+                PathFiles.OUT_PATH_JSON + PathFiles.USERS_AND_PRODUCTS_XML;
     }
 
-    private String _03_categoriesWithSoldProducts() throws IOException {
-        List<CategoryCountProductsDto> categoryCountProducts = this.categoryService.allOrderByCountProducts();
+    private String _03_categoriesWithSoldProducts() throws IOException, JAXBException {
+        XMLCategoryCountProductsDto categoryCountProducts = this.categoryService.allOrderByCountProducts();
 
-        this.writeJsonToFile(categoryCountProducts, PathFiles.CATEGORIES_BY_PRODUCTS_FILE_PATH_JSON);
+//        this.writeJsonToFile(categoryCountProducts, PathFiles.CATEGORIES_BY_PRODUCTS_FILE_PATH_JSON);
 
+        this.writeXMLToFile(categoryCountProducts, PathFiles.CATEGORIES_BY_PRODUCTS_FILE_PATH_XML);
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
-                PathFiles.OUT_PATH_JSON + PathFiles.CATEGORIES_BY_PRODUCTS_JSON;
+                PathFiles.OUT_PATH_JSON + PathFiles.CATEGORIES_BY_PRODUCTS_XML;
     }
 
     private String _02_soldProductWithBuyers() throws IOException, JAXBException {
