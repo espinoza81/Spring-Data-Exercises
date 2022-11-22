@@ -2,18 +2,20 @@ package cardealer.service.impl;
 
 import cardealer.constant.PathFiles;
 import cardealer.domain.custumer.*;
-import cardealer.domain.sale.Sale;
+import cardealer.domain.custumer.dtos.CustomerOrderBirthdateDto;
+import cardealer.domain.custumer.wrapper.CustomerImportWrapperDto;
+import cardealer.domain.custumer.wrapper.CustomerOrderBirthdateWrapperDto;
 import cardealer.repository.CustomerRepository;
 import cardealer.service.CustomerService;
 import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Array;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -33,12 +35,18 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void seedCustomers() throws IOException {
+    public void seedCustomers() throws IOException, JAXBException {
         if(customerRepository.count() == 0) {
             final FileReader fileReader = new FileReader(PathFiles.CUSTOMERS_FILE_PATH.toFile());
 
-            List<Customer> customers = Arrays.stream(gson.fromJson(fileReader, CustomerImportDto[].class))
-                    .map(customerImportDto -> mapper.map(customerImportDto, Customer.class))
+            final JAXBContext context = JAXBContext.newInstance(CustomerImportWrapperDto.class);
+            final Unmarshaller unmarshaller = context.createUnmarshaller();
+            final CustomerImportWrapperDto customersDto = (CustomerImportWrapperDto) unmarshaller.unmarshal(fileReader);
+
+            List<Customer> customers = customersDto
+                    .getCustomers()
+                    .stream()
+                    .map(customer -> mapper.map(customer, Customer.class))
                     .toList();
 
             fileReader.close();
@@ -48,13 +56,15 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerOrderBirthdateDto> getAllCustomers() {
+    public CustomerOrderBirthdateWrapperDto getAllCustomers() {
 
-        return this.customerRepository.findAllByOrderByBirthDateAscYoungDriverDesc()
+        List<CustomerOrderBirthdateDto> customers = this.customerRepository.findAllByOrderByBirthDateAscYoungDriverDesc()
                 .orElseThrow(NoSuchElementException::new)
                 .stream()
                 .map(customer -> mapper.map(customer, CustomerOrderBirthdateDto.class))
                 .toList();
+
+        return new CustomerOrderBirthdateWrapperDto(customers);
     }
 
     @Override

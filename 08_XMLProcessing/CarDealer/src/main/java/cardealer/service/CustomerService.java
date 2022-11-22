@@ -1,16 +1,16 @@
 package cardealer.service;
 
-import cardealer.domain.custumer.CustomerOrderBirthdateDto;
 import cardealer.domain.custumer.CustomerTotalSalesDto;
+import cardealer.domain.custumer.wrapper.CustomerOrderBirthdateWrapperDto;
 
-import java.io.FileNotFoundException;
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.List;
 
 public interface CustomerService {
-    void seedCustomers() throws IOException;
+    void seedCustomers() throws IOException, JAXBException;
 
-    List<CustomerOrderBirthdateDto> getAllCustomers();
+    CustomerOrderBirthdateWrapperDto getAllCustomers();
 
     List<CustomerTotalSalesDto> getAllWithTotalSales();
 }

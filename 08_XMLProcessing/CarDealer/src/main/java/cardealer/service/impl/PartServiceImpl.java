@@ -2,10 +2,8 @@ package cardealer.service.impl;
 
 import cardealer.constant.PathFiles;
 import cardealer.domain.part.Part;
-import cardealer.domain.part.PartImportDto;
-import cardealer.domain.part.PartImportWrapperDto;
+import cardealer.domain.part.wrapper.PartImportWrapperDto;
 import cardealer.domain.supplier.Supplier;
-import cardealer.domain.supplier.SupplierImportWrapperDto;
 import cardealer.repository.PartRepository;
 import cardealer.repository.SupplierRepository;
 import cardealer.service.PartService;
@@ -20,7 +18,6 @@ import javax.xml.bind.Unmarshaller;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.LongStream;
 
 @Service
 public class PartServiceImpl implements PartService {
@@ -54,6 +51,7 @@ public class PartServiceImpl implements PartService {
                     .getParts()
                     .stream()
                     .map(part -> mapper.map(part, Part.class))
+                    .map(this::setRandomSupplier)
                     .toList();
 
             fileReader.close();

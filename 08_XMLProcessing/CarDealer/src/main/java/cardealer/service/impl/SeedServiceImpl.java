@@ -34,8 +34,8 @@ public class SeedServiceImpl implements SeedService {
     public void seedData() throws IOException, JAXBException {
         supplierService.seedSupplier();
         partService.seedPart();
-//        carService.seedCars();
-//        customerService.seedCustomers();
-//        saleService.seedSales();
+        carService.seedCars();
+        customerService.seedCustomers();
+        saleService.seedSales();
     }
 }

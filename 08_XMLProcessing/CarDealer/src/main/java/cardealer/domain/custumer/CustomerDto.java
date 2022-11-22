@@ -1,6 +1,5 @@
 package cardealer.domain.custumer;
 
-import cardealer.domain.sale.Sale;
 import cardealer.domain.sale.SaleDto;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;

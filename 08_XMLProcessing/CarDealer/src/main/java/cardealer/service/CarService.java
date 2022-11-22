@@ -1,15 +1,16 @@
 package cardealer.service;
 
-import cardealer.domain.car.CarToyotaDto;
-import cardealer.domain.car.CarWithPartsDto;
+import cardealer.domain.car.wrapper.CarPartsWrapper;
+import cardealer.domain.car.wrapper.CarToyotaWrapper;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.List;
 
 public interface CarService {
-    void seedCars() throws IOException;
+    void seedCars() throws IOException, JAXBException;
 
-    List<CarToyotaDto> getAllCarsByMaker(String maker);
+    CarToyotaWrapper getAllCarsByMaker(String maker);
 
-    List<CarWithPartsDto> getAllCarWithParts();
+    CarPartsWrapper getAllCarWithParts();
 }

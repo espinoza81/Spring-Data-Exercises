@@ -1,7 +1,7 @@
 package cardealer.domain.sale;
 
-import cardealer.domain.car.CarDto;
-import cardealer.domain.car.CarWithoutPartsDto;
+import cardealer.domain.car.dtos.CarDto;
+import cardealer.domain.car.dtos.CarWithoutPartsDto;
 import cardealer.domain.custumer.CustomerDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

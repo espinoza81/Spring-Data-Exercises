@@ -1,12 +1,12 @@
 package cardealer.service.impl;
 
 import cardealer.constant.PathFiles;
-import cardealer.domain.car.CarToyotaDto;
-import cardealer.domain.car.CarWithPartsDto;
-import cardealer.domain.custumer.CustomerOrderBirthdateDto;
+import cardealer.domain.car.wrapper.CarPartsWrapper;
+import cardealer.domain.car.wrapper.CarToyotaWrapper;
 import cardealer.domain.custumer.CustomerTotalSalesDto;
+import cardealer.domain.custumer.wrapper.CustomerOrderBirthdateWrapperDto;
 import cardealer.domain.sale.SaleWithDiscountDto;
-import cardealer.domain.supplier.LocalSupplierDto;
+import cardealer.domain.supplier.wrapper.LocalSupplierWrapper;
 import cardealer.service.*;
 import com.google.gson.Gson;
 import cardealer.constant.MenuLines;
@@ -18,8 +18,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
@@ -52,7 +50,7 @@ public class ExecutorServiceImpl implements ExecutorService {
     }
 
     @Override
-    public String executeCommand() throws IOException {
+    public String executeCommand() throws JAXBException {
 
         printMainMenu();
 
@@ -72,69 +70,59 @@ public class ExecutorServiceImpl implements ExecutorService {
         return result.trim();
     }
 
-    private String _06_salesWithDiscount() throws IOException {
+    private String _06_salesWithDiscount() throws JAXBException {
         List<SaleWithDiscountDto> sales = this.saleService.getAllSalesWithDiscount();
 
-        this.writeJsonToFile(sales, PathFiles.SALES_DISCOUNTS_FILE_PATH);
+        this.writeXMLToFile(sales, PathFiles.SALES_DISCOUNTS_FILE_PATH);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
                 PathFiles.OUT_PATH + PathFiles._06_SALES_DISCOUNTS;
     }
 
-    private String _05_getCustomersTotalSales() throws IOException {
+    private String _05_getCustomersTotalSales() throws JAXBException {
         List<CustomerTotalSalesDto> customers = this.customerService.getAllWithTotalSales();
 
-        this.writeJsonToFile(customers, PathFiles.CUSTOMER_TOTAL_SALES_FILE_PATH);
+        this.writeXMLToFile(customers, PathFiles.CUSTOMER_TOTAL_SALES_FILE_PATH);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
                 PathFiles.OUT_PATH + PathFiles._05_CUSTOMER_TOTAL_SALES;
     }
 
-    private String _04_allCarsWithParts() throws IOException {
-        List<CarWithPartsDto> carWithPartsDtos = this.carService.getAllCarWithParts();
+    private String _04_allCarsWithParts() throws JAXBException {
+        CarPartsWrapper carWithPartsDtos = this.carService.getAllCarWithParts();
 
-        this.writeJsonToFile(carWithPartsDtos, PathFiles.CARS_AND_PARTS_FILE_PATH);
+        this.writeXMLToFile(carWithPartsDtos, PathFiles.CARS_AND_PARTS_FILE_PATH);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
                 PathFiles.OUT_PATH + PathFiles._04_CARS_AND_PARTS;
     }
 
-    private String _03_allLocalSuppliers() throws IOException {
-        List<LocalSupplierDto> localSuppliers = this.supplierService.getAllLocalSuppliers();
+    private String _03_allLocalSuppliers() throws JAXBException {
+        LocalSupplierWrapper localSuppliers = this.supplierService.getAllLocalSuppliers();
 
-        this.writeJsonToFile(localSuppliers, PathFiles.LOCAL_SUPPLIERS_FILE_PATH);
+        this.writeXMLToFile(localSuppliers, PathFiles.LOCAL_SUPPLIERS_FILE_PATH);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
                 PathFiles.OUT_PATH + PathFiles._03_LOCAL_SUPPLIERS;
     }
 
-    private String _02_allCarsFromToyota() throws IOException {
-        List<CarToyotaDto> carsFromToyota = this.carService.getAllCarsByMaker(MAKER);
+    private String _02_allCarsFromToyota() throws JAXBException {
+        CarToyotaWrapper carsFromToyota = this.carService.getAllCarsByMaker(MAKER);
 
-        this.writeJsonToFile(carsFromToyota, PathFiles.CARS_FROM_TOYOTA_FILE_PATH);
+        this.writeXMLToFile(carsFromToyota, PathFiles.CARS_FROM_TOYOTA_FILE_PATH);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
                 PathFiles.OUT_PATH + PathFiles._02_CARS_FROM_TOYOTA;
     }
 
-    private String _01_allCustomerOrderByBirthdate() throws IOException {
+    private String _01_allCustomerOrderByBirthdate() throws JAXBException {
 
-        List<CustomerOrderBirthdateDto> allCustomers = this.customerService.getAllCustomers();
+        CustomerOrderBirthdateWrapperDto allCustomers = this.customerService.getAllCustomers();
 
-        this.writeJsonToFile(allCustomers, PathFiles.ORDERED_CUSTOMERS_FILE_PATH);
+        this.writeXMLToFile(allCustomers, PathFiles.ORDERED_CUSTOMERS_FILE_PATH);
 
         return OutputMessages.CHECK_THE_FILE + System.lineSeparator() +
                 PathFiles.OUT_PATH + PathFiles._01_ORDERED_CUSTOMERS;
-    }
-
-    public <T> void writeJsonToFile(T object, Path filePath) throws IOException {
-        final FileWriter fileWriter = new FileWriter(filePath.toFile());
-
-        gson.toJson(object, fileWriter);
-
-        fileWriter.flush();
-        fileWriter.close();
-
     }
 
     public <T> void writeXMLToFile(T data, Path filePath) throws JAXBException {

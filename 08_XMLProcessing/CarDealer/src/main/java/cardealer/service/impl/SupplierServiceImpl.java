@@ -1,10 +1,10 @@
 package cardealer.service.impl;
 
 import cardealer.constant.PathFiles;
-import cardealer.domain.supplier.LocalSupplierDto;
+import cardealer.domain.supplier.dtos.LocalSupplierDto;
 import cardealer.domain.supplier.Supplier;
-import cardealer.domain.supplier.SupplierImportDto;
-import cardealer.domain.supplier.SupplierImportWrapperDto;
+import cardealer.domain.supplier.wrapper.LocalSupplierWrapper;
+import cardealer.domain.supplier.wrapper.SupplierImportWrapperDto;
 import cardealer.repository.SupplierRepository;
 import cardealer.service.SupplierService;
 import com.google.gson.Gson;
@@ -17,7 +17,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -61,9 +60,11 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public List<LocalSupplierDto> getAllLocalSuppliers() {
-        return this.supplierRepository
+    public LocalSupplierWrapper getAllLocalSuppliers() {
+        List<LocalSupplierDto> localSupplierDtos = this.supplierRepository
                 .getLocalSupplierPartCount()
                 .orElseThrow(NoSuchElementException::new);
+
+        return new LocalSupplierWrapper(localSupplierDtos);
     }
 }

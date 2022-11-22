@@ -1,8 +1,6 @@
 package cardealer.domain.sale;
 
-import cardealer.domain.car.CarWithoutPartsDto;
-import cardealer.domain.custumer.SpentMoneyAdapter;
-import com.google.gson.annotations.JsonAdapter;
+import cardealer.domain.car.dtos.CarWithoutPartsDto;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
