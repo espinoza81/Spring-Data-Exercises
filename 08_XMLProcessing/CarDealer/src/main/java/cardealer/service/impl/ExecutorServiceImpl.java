@@ -3,9 +3,10 @@ package cardealer.service.impl;
 import cardealer.constant.PathFiles;
 import cardealer.domain.car.wrapper.CarPartsWrapper;
 import cardealer.domain.car.wrapper.CarToyotaWrapper;
-import cardealer.domain.custumer.CustomerTotalSalesDto;
 import cardealer.domain.custumer.wrapper.CustomerOrderBirthdateWrapperDto;
-import cardealer.domain.sale.SaleWithDiscountDto;
+import cardealer.domain.custumer.wrapper.CustomerTotalSalesWrapper;
+import cardealer.domain.sale.dtos.SaleWithDiscountDto;
+import cardealer.domain.sale.wrapper.SaleDiscountWrapper;
 import cardealer.domain.supplier.wrapper.LocalSupplierWrapper;
 import cardealer.service.*;
 import com.google.gson.Gson;
@@ -71,7 +72,7 @@ public class ExecutorServiceImpl implements ExecutorService {
     }
 
     private String _06_salesWithDiscount() throws JAXBException {
-        List<SaleWithDiscountDto> sales = this.saleService.getAllSalesWithDiscount();
+        SaleDiscountWrapper sales = this.saleService.getAllSalesWithDiscount();
 
         this.writeXMLToFile(sales, PathFiles.SALES_DISCOUNTS_FILE_PATH);
 
@@ -80,7 +81,7 @@ public class ExecutorServiceImpl implements ExecutorService {
     }
 
     private String _05_getCustomersTotalSales() throws JAXBException {
-        List<CustomerTotalSalesDto> customers = this.customerService.getAllWithTotalSales();
+        CustomerTotalSalesWrapper customers = this.customerService.getAllWithTotalSales();
 
         this.writeXMLToFile(customers, PathFiles.CUSTOMER_TOTAL_SALES_FILE_PATH);
 

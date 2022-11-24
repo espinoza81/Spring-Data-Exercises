@@ -1,8 +1,7 @@
 package cardealer.repository;
 
 import cardealer.domain.custumer.Customer;
-import cardealer.domain.custumer.CustomerDto;
-import cardealer.domain.custumer.CustomerTotalSalesDto;
+import cardealer.domain.custumer.dtos.CustomerTotalSalesDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,7 +16,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Optional<List<Customer>> findAllByOrderByBirthDateAscYoungDriverDesc();
 
-    @Query("SELECT new cardealer.domain.custumer.CustomerTotalSalesDto" +
+    @Query("SELECT new cardealer.domain.custumer.dtos.CustomerTotalSalesDto" +
             "(c.name, count(s), sum(p.price*(1.0-(s.discount/100.0)))) " +
             "FROM Customer c " +
             "JOIN c.sales s " +

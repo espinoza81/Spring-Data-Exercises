@@ -1,6 +1,7 @@
 package cardealer.domain.car.dtos;
 
 import cardealer.domain.part.dtos.PartWithNameDto;
+import cardealer.domain.part.wrapper.PartWithNameWrapper;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +19,16 @@ import java.util.Set;
 public class CarWithPartsDto {
 
 
-    private CarWithoutPartsDto car;
+    @XmlAttribute
+    private String make;
 
-    @XmlElement
-    public Set<PartWithNameDto> parts;
+    @XmlAttribute
+    private String model;
+
+    @XmlAttribute(name = "travelled-distance")
+    private Long travelledDistance;
+
+    @XmlElement(name = "parts")
+    PartWithNameWrapper partWrapper;
+
 }

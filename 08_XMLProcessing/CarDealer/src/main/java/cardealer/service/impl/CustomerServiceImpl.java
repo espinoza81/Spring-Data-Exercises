@@ -3,8 +3,10 @@ package cardealer.service.impl;
 import cardealer.constant.PathFiles;
 import cardealer.domain.custumer.*;
 import cardealer.domain.custumer.dtos.CustomerOrderBirthdateDto;
+import cardealer.domain.custumer.dtos.CustomerTotalSalesDto;
 import cardealer.domain.custumer.wrapper.CustomerImportWrapperDto;
 import cardealer.domain.custumer.wrapper.CustomerOrderBirthdateWrapperDto;
+import cardealer.domain.custumer.wrapper.CustomerTotalSalesWrapper;
 import cardealer.repository.CustomerRepository;
 import cardealer.service.CustomerService;
 import com.google.gson.Gson;
@@ -68,9 +70,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerTotalSalesDto> getAllWithTotalSales() {
-        return this.customerRepository
+    public CustomerTotalSalesWrapper getAllWithTotalSales() {
+        List<CustomerTotalSalesDto> customerTotalSalesDtos = this.customerRepository
                 .getAllCustomersWithTotalSale()
                 .orElseThrow(NoSuchElementException::new);
+
+        return new CustomerTotalSalesWrapper(customerTotalSalesDtos);
     }
 }

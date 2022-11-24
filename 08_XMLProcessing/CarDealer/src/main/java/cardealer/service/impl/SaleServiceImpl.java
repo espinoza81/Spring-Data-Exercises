@@ -4,8 +4,9 @@ import cardealer.constant.Discount;
 import cardealer.domain.car.Car;
 import cardealer.domain.custumer.Customer;
 import cardealer.domain.sale.Sale;
-import cardealer.domain.sale.SaleDto;
-import cardealer.domain.sale.SaleWithDiscountDto;
+import cardealer.domain.sale.dtos.SaleDto;
+import cardealer.domain.sale.dtos.SaleWithDiscountDto;
+import cardealer.domain.sale.wrapper.SaleDiscountWrapper;
 import cardealer.repository.CarRepository;
 import cardealer.repository.CustomerRepository;
 import cardealer.repository.SaleRepository;
@@ -77,12 +78,15 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     @Transactional
-    public List<SaleWithDiscountDto> getAllSalesWithDiscount() {
-        return this.saleRepository
+    public SaleDiscountWrapper getAllSalesWithDiscount() {
+
+        List<SaleWithDiscountDto> saleWithDiscountDtos = this.saleRepository
                 .findAll()
                 .stream()
                 .map(sale -> mapper.map(sale, SaleDto.class))
                 .map(SaleDto::saleWithDiscountDto)
                 .toList();
+
+        return new SaleDiscountWrapper(saleWithDiscountDtos);
     }
 }

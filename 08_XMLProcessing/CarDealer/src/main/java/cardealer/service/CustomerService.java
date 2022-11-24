@@ -1,7 +1,8 @@
 package cardealer.service;
 
-import cardealer.domain.custumer.CustomerTotalSalesDto;
+import cardealer.domain.custumer.dtos.CustomerTotalSalesDto;
 import cardealer.domain.custumer.wrapper.CustomerOrderBirthdateWrapperDto;
+import cardealer.domain.custumer.wrapper.CustomerTotalSalesWrapper;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -12,5 +13,5 @@ public interface CustomerService {
 
     CustomerOrderBirthdateWrapperDto getAllCustomers();
 
-    List<CustomerTotalSalesDto> getAllWithTotalSales();
+    CustomerTotalSalesWrapper getAllWithTotalSales();
 }
